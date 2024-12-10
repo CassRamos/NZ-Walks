@@ -21,9 +21,10 @@ namespace NZWalk.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllWalks()
+        public async Task<IActionResult> GetAllWalks([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy,
+                                                     [FromQuery] bool? isAscending, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
         {
-            List<Walk> walksDomain = await _walkRepository.GetAllAsync();
+            List<Walk> walksDomain = await _walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
 
             return Ok(_mapper.Map<List<WalkResponseDTO>>(walksDomain));
         }
@@ -52,7 +53,7 @@ namespace NZWalk.API.Controllers
 
             WalkResponseDTO walkDTO = _mapper.Map<WalkResponseDTO>(walkDomain);
 
-            return Ok(walkDTO);
+            return CreatedAtAction(nameof(GetWalkById), new { id = walkDomain.Id }, walkDTO);
         }
 
         [HttpPut]
@@ -83,7 +84,7 @@ namespace NZWalk.API.Controllers
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<WalkResponseDTO>(walkDomain));
+            return NoContent();
         }
     }
 }

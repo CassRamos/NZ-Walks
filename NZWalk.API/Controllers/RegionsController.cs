@@ -14,17 +14,20 @@ namespace NZWalk.API.Controllers
     {
         private readonly IRegionRepository _regionRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<RegionsController> _logger;
 
-        public RegionsController(IRegionRepository regionRepository, IMapper mapper)
+        public RegionsController(IRegionRepository regionRepository, IMapper mapper, ILogger<RegionsController> logger)
         {
             _regionRepository = regionRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
         [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAllRegions()
         {
+            _logger.LogInformation("GetAllRegions was invoked");
             var regionsDomain = await _regionRepository.GetAllAsync();
 
             var regionsDTO = _mapper.Map<List<RegionResponseDTO>>(regionsDomain);

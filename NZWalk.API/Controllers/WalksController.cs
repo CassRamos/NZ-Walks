@@ -26,6 +26,9 @@ namespace NZWalk.API.Controllers
         {
             List<Walk> walksDomain = await _walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
 
+            //Testing global exception handler
+            //throw new Exception("This is a new exception");
+
             return Ok(_mapper.Map<List<WalkResponseDTO>>(walksDomain));
         }
 
